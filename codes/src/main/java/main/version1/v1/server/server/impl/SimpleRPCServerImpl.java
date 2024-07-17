@@ -3,7 +3,7 @@ package main.version1.v1.server.server.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main.version1.v1.server.server.RPCServer;
-import main.version1.v1.server.server.provider.ServiceProvider;
+import main.version1.v1.server.provider.ServiceProvider;
 import main.version1.v1.server.server.work.WorkThread;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class SimpleRPCServerImpl implements RPCServer {
     public void start(int port) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            log.info("服务器启动了......");
+            log.info("简易版服务器启动了......");
             while (true){
                 // BIO,没有连接会一直阻塞
                 Socket accept = serverSocket.accept();

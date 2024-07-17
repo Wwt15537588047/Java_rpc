@@ -1,7 +1,7 @@
 package main.version1.v1.server.server.work;
 
 import lombok.AllArgsConstructor;
-import main.version1.v1.server.server.provider.ServiceProvider;
+import main.version1.v1.server.provider.ServiceProvider;
 import main.version1.v1.common.message.RPCRequest;
 import main.version1.v1.common.message.RPCResponse;
 
