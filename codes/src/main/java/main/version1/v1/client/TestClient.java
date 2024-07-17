@@ -1,5 +1,4 @@
 package main.version1.v1.client;
-
 import lombok.extern.slf4j.Slf4j;
 import main.version1.v1.common.pojo.User;
 import main.version1.v1.client.proxy.ClientProxy;

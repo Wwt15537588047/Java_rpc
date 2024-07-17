@@ -1,0 +1,19 @@
+INFO main main.version1.v1.server.server.impl.SimpleRPCServerImpl - 服务器启动了......
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : null
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:null
+INFO main main.version1.v1.server.server.impl.SimpleRPCServerImpl - 服务器启动了......
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : null
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:null
+INFO main main.version1.v1.server.server.impl.SimpleRPCServerImpl - 服务器启动了......
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : null
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:null
+INFO main main.version1.v1.server.server.impl.SimpleRPCServerImpl - 服务器启动了......
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : null
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:null
+INFO main main.version1.v1.server.server.impl.SimpleRPCServerImpl - 服务器启动了......
+INFO Thread-0 main.version1.v1.common.service.impl.UserServiceImpl - 客户端查询了id :12的用户
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : User(id=12, userName=259e3b5f-43cc-466d-a797-d31d8c74656e, sex=false)
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:100
+INFO Thread-2 main.version1.v1.common.service.impl.UserServiceImpl - 客户端查询了id :12的用户
+INFO main main.version1.v1.client.TestClient - 从客户端接收到的User : User(id=12, userName=1372a6e0-95b3-4969-889b-49412c864f69, sex=true)
+INFO main main.version1.v1.client.TestClient - 向服务端插入的用户Id:100

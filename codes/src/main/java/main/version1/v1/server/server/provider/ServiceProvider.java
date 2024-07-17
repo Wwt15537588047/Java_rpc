@@ -13,10 +13,10 @@ public class ServiceProvider {
 
     // 本地注册服务
     public void providerServiceInterface(Object service){
-        String serviceName = service.getClass().getName();
+//        String serviceName = service.getClass().getName();
         Class<?>[] interfaces = service.getClass().getInterfaces();
         for (Class<?> clazz : interfaces) {
-            interfaceProvider.put(clazz.getName(), serviceName);
+            interfaceProvider.put(clazz.getName(), service);
         }
     }
     // 获取服务实例
