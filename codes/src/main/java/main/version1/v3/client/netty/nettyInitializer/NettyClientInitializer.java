@@ -1,4 +1,4 @@
-package main.version1.v2.client.netty.nettyInitializer;
+package main.version1.v3.client.netty.nettyInitializer;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -8,7 +8,7 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolver;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import main.version1.v2.client.netty.handler.NettyClientHandler;
+import main.version1.v3.client.netty.handler.NettyClientHandler;
 
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
     @Override
