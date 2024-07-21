@@ -1,11 +1,15 @@
-package loadBalance;
+package main.version3.v2.client.serviceCenter.balance.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import lombok.extern.slf4j.Slf4j;
+import main.version3.v2.client.serviceCenter.balance.LoadBalance;
 
-public class ConsistencyHashing {
+import java.util.*;
+
+/**
+ * 一致性哈希负载均衡算法实现
+ */
+@Slf4j
+public class ConsistencyHashLoadBalanceImpl implements LoadBalance {
     // 虚拟节点的个数
     private static final int VIRTUAL_NUM = 5;
 
@@ -16,10 +20,10 @@ public class ConsistencyHashing {
     private static List<String> realNodes = new LinkedList<String>();
 
     //模拟初始服务器
-    private static String[] servers = { "192.168.1.1", "192.168.1.2", "192.168.1.3", "192.168.1.5", "192.168.1.6" };
+    private static String[] servers =null;
 
-    static {
-        for (String server : servers) {
+    private static void init(List<String> serviceList) {
+        for (String server :serviceList) {
             realNodes.add(server);
             System.out.println("真实节点[" + server + "] 被添加");
             for (int i = 0; i < VIRTUAL_NUM; i++) {
@@ -30,26 +34,26 @@ public class ConsistencyHashing {
             }
         }
     }
-
     /**
      * 获取被分配的节点名
      *
      * @param node
      * @return
      */
-    public static String getServer(String node) {
+    public static String getServer(String node,List<String> serviceList) {
+        init(serviceList);
         int hash = getHash(node);
         Integer key = null;
-        // tailMap返回一个从头到尾（从最小键到最大键的子映射），但不包括指定的键hash。
         SortedMap<Integer, String> subMap = shards.tailMap(hash);
-        System.out.println("subMap的个数为"+ subMap.size() + "具体内容为："+ subMap);
         if (subMap.isEmpty()) {
             key = shards.lastKey();
         } else {
             key = subMap.firstKey();
         }
         String virtualNode = shards.get(key);
-        return virtualNode.substring(0, virtualNode.indexOf("&&"));
+        String readNode = virtualNode.substring(0, virtualNode.indexOf("&&"));
+        System.out.println("真实节点为："+ readNode + ",虚拟节点为：" + virtualNode + "的节点被选择了...");
+        return readNode;
     }
 
     /**
@@ -57,7 +61,7 @@ public class ConsistencyHashing {
      *
      * @param node
      */
-    public static void addNode(String node) {
+    public  void addNode(String node) {
         if (!realNodes.contains(node)) {
             realNodes.add(node);
             System.out.println("真实节点[" + node + "] 上线添加");
@@ -75,7 +79,7 @@ public class ConsistencyHashing {
      *
      * @param node
      */
-    public static void delNode(String node) {
+    public  void delNode(String node) {
         if (realNodes.contains(node)) {
             realNodes.remove(node);
             System.out.println("真实节点[" + node + "] 下线移除");
@@ -107,21 +111,9 @@ public class ConsistencyHashing {
         return hash;
     }
 
-    public static void main(String[] args) {
-        //模拟客户端的请求
-        String[] nodes = { "127.0.0.1", "10.9.3.253", "192.168.10.1" };
-
-        for (String node : nodes) {
-            System.out.println("[" + node + "]的hash值为" + getHash(node) + ", 被路由到结点[" + getServer(node) + "]");
-        }
-
-        // 添加一个节点(模拟服务器上线)
-        addNode("192.168.1.7");
-        // 删除一个节点（模拟服务器下线）
-        delNode("192.168.1.2");
-
-        for (String node : nodes) {
-            System.out.println("[" + node + "]的hash值为" + getHash(node) + ", 被路由到结点[" + getServer(node) + "]");
-        }
+    @Override
+    public String balance(List<String> addressList) {
+        String random= UUID.randomUUID().toString();
+        return getServer(random,addressList);
     }
 }
