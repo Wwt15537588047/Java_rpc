@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/codes/codes.iml" filepath="$PROJECT_DIR$/codes/codes.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/java_rpc.iml" filepath="$PROJECT_DIR$/.idea/java_rpc.iml" />
-    </modules>
-  </component>
-</project>
