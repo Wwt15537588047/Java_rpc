@@ -5,6 +5,9 @@ import main.version4.v1.server.rateLimit.RateLimit;
 
 /**
  * 令牌桶限流算法实现
+ * CAPACITY为令牌桶的最大容量，curCAPACITY为当前令牌桶中令牌的数量，timeStamp为上一次请求获取令牌的时间，
+ * 我们在这里并没有实现计数器每秒产生多少令牌放入容器中，而是记住了上一次请求到来的时间，和这次请求之间的时间差值
+ * 进一步根据RATE计算出这段时间能够产生的令牌数量，取min(CAPACITY, CURCAPAITY)。
  */
 @Slf4j
 public class TokenBucketRateLimitImpl implements RateLimit {
