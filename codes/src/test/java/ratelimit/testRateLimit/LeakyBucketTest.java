@@ -1,6 +1,6 @@
-package test.ratelimit.testRateLimit;
+package ratelimit.testRateLimit;
 
-import test.ratelimit.ratelimitImpl.LeakyBucketRateLimiteImpl;
+import ratelimit.ratelimitImpl.LeakyBucketRateLimiteImpl;
 
 import java.util.LinkedList;
 import java.util.Queue;

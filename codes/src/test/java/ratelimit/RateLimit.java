@@ -1,4 +1,4 @@
-package test.ratelimit;
+package ratelimit;
 
 /**
  * 限流算法接口

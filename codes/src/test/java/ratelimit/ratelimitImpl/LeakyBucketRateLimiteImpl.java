@@ -1,6 +1,6 @@
-package test.ratelimit.ratelimitImpl;
+package ratelimit.ratelimitImpl;
 
-import test.ratelimit.RateLimit;
+import ratelimit.RateLimit;
 
 /**
  * 判断漏桶算法是否能够继续添加容量
