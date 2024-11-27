@@ -11,7 +11,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     public User getUserById(Integer id) {
-        log.info("服务端查询了id :{}的用户",id);
+        log.info("[GetUserById] server find user success, user id is :{}",id);
         // 模拟从数据库中取用户的行为
         Random random = new Random();
         User user = User.builder().userName(UUID.randomUUID().toString())
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Integer insertUserById(User user) {
-        System.out.println("插入数据成功"+user.getUserName());
+        log.info("[insertUserById]insert user success, user name : {} ",user.getUserName());
         return user.getId();
     }
 }

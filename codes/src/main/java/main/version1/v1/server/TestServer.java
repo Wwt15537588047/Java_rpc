@@ -12,7 +12,8 @@ public class TestServer {
         UserService userService = new UserServiceImpl();
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.providerServiceInterface(userService);
-
+//        RPCServer rpcServer1 = new SimpleRPCServerImpl(serviceProvider);
+//        rpcServer1.start(9999);
         RPCServer rpcServer = new ThreadPoolRPCServerImpl(serviceProvider);
         rpcServer.start(9999);
     }

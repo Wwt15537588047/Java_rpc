@@ -22,7 +22,7 @@ public class SimpleRPCServerImpl implements RPCServer {
             while (true){
                 // BIO,没有连接会一直阻塞
                 Socket accept = serverSocket.accept();
-                // 有链接，创建一个线程执行任务
+                // 有链接，创建单线程执行任务
                 new Thread(new WorkThread(accept, serviceProvider)).start();
             }
         } catch (IOException e) {

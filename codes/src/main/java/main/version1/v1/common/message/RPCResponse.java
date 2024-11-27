@@ -19,6 +19,6 @@ public class RPCResponse implements Serializable {
     }
     //构造失败信息
     public static RPCResponse fail(){
-        return RPCResponse.builder().code(500).message("服务器发生错误").build();
+        return RPCResponse.builder().code(500).message("服务器发生错误.").build();
     }
 }

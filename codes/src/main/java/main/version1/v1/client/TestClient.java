@@ -14,9 +14,9 @@ public class TestClient {
         UserService proxy = clientProxy.getProxy(UserService.class);
         // 调用代理对象的方法
         User user = proxy.getUserById(12);
-        log.info("从服务端接收到的User : {}", user);
+        log.info("[main] client receive User : {}", user);
         User u=User.builder().id(100).userName("wxx").sex(true).build();
         Integer id = proxy.insertUserById(u);
-        log.info("向服务端插入的用户Id:{}",id);
+        log.info("[main] client insert user to server Id is :{}",id);
     }
 }
