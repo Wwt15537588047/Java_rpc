@@ -11,6 +11,9 @@ import main.version1.v2.server.provider.ServiceProvider;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * 服务端Netty接收来自客户端的信息并解析调用
+ */
 @Slf4j
 @AllArgsConstructor
 public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCRequest> {

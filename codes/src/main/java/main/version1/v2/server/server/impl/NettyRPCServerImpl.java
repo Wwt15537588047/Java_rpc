@@ -25,7 +25,8 @@ public class NettyRPCServerImpl implements RPCServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             //初始化
             serverBootstrap.group(bossGroup,workGroup).channel(NioServerSocketChannel.class)
-                    //NettyClientInitializer这里 配置netty对消息的处理机制
+                    //NettyServerInitializer这里 配置netty对消息的处理机制,客户端和服务端均需要配置，以告知Netty如何对消息进行
+                    // 编结码以及序列化
                     .childHandler(new NettyServerInitializer(serviceProvider));
             //同步堵塞
             ChannelFuture channelFuture=serverBootstrap.bind(port).sync();

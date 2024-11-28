@@ -30,7 +30,7 @@ public class ServiceProvider {
         for (Class<?> clazz : interfaces) {
             // 本机的映射表
             interfaceProvider.put(clazz.getName(), service);
-            // 在注册中心中中注册服务
+            // 在注册中心中注册服务
             serviceRegister.register(clazz.getName(), new InetSocketAddress(host, port));
         }
     }

@@ -10,6 +10,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import java.net.InetSocketAddress;
 import java.util.List;
 
+/**
+ * Zookeeper注册中心的实现
+ */
 @Slf4j
 public class ZKServiceCenterImpl implements ServiceCenter {
     // curator提供的zookeeper客户端

@@ -5,6 +5,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import main.version1.v2.common.message.RPCResponse;
 
+/**
+ * 指定对接收消息的处理机制
+ */
 public class NettyClientHandler extends SimpleChannelInboundHandler<RPCResponse> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RPCResponse response) throws Exception {

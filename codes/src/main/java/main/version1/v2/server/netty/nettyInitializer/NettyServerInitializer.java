@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import main.version1.v2.server.netty.handler.NettyRPCServerHandler;
 import main.version1.v2.server.provider.ServiceProvider;
 
+/**
+ * 服务器端Netty对消息的处理机制
+ */
 @Slf4j
 @AllArgsConstructor
 public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
