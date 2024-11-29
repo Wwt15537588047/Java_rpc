@@ -29,18 +29,21 @@ public class ClientProxy implements InvocationHandler {
     public ClientProxy(int choose){
         switch (choose){
             case 0:
-                rpcClient=new NettyRPCClientImpl();
+//                rpcClient=new NettyRPCClientImpl();
                 serviceCenter = new ZKServiceCenterImpl();
+                rpcClient = new NettyRPCClientImpl(serviceCenter);
                 break;
             case 1:
-                rpcClient=new SimpleSocketRPCClientImpl();
+
+//                rpcClient=new SimpleSocketRPCClientImpl();
                 serviceCenter = new ZKServiceCenterImpl();
+                rpcClient = new SimpleSocketRPCClientImpl(serviceCenter);
                 break;
         }
     }
     public ClientProxy(){
-        rpcClient=new NettyRPCClientImpl();
         serviceCenter = new ZKServiceCenterImpl();
+        rpcClient = new NettyRPCClientImpl(serviceCenter);
     }
     //jdk动态代理，每一次代理对象调用方法，都会经过此方法增强（反射获取request对象，socket发送到服务端）
     @Override

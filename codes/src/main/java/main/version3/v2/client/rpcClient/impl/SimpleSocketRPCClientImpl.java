@@ -19,6 +19,9 @@ public class SimpleSocketRPCClientImpl implements RPCClient {
     public SimpleSocketRPCClientImpl(){
         this.serviceCenter = new ZKServiceCenterImpl();
     }
+    public SimpleSocketRPCClientImpl(ServiceCenter serviceCenter){
+        this.serviceCenter = serviceCenter;
+    }
     @Override
     public RPCResponse sendRequest(RPCRequest request) {
         // 从注册中心获取host, port

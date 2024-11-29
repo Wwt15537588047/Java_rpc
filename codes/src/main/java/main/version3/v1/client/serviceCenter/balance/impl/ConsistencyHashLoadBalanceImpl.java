@@ -46,11 +46,15 @@ public class ConsistencyHashLoadBalanceImpl implements LoadBalance {
         Integer key = null;
         SortedMap<Integer, String> subMap = shards.tailMap(hash);
         if (subMap.isEmpty()) {
+            // subMap为空，说明hash已经超出了哈希环的最大值，则选择环上的最后一个节点
             key = shards.lastKey();
         } else {
+            // subMap不为空，说明存在比hash更大的节点，则选择第一个节点(最接近hash)
             key = subMap.firstKey();
         }
+        // 获取目标虚拟节点
         String virtualNode = shards.get(key);
+        // 根据虚拟节点获取到真实节点，并返回
         String readNode = virtualNode.substring(0, virtualNode.indexOf("&&"));
         System.out.println("真实节点为："+ readNode + ",虚拟节点为：" + virtualNode + "的节点被选择了...");
         return readNode;

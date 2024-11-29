@@ -81,6 +81,7 @@ public class ZKServiceCenterImpl implements ServiceCenter {
                 if(s.equals(serviceName)){
                     log.info("服务：{}在白名单中，可以重试...", serviceName);
                     canRetry = true;
+                    break;
                 }
             }
         } catch (Exception e) {

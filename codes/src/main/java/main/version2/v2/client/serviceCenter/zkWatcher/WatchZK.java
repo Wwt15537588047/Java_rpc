@@ -41,6 +41,7 @@ public class WatchZK {
 //                            cache.addServcieToCache(serviceName,address);
                             cache.addServiceToCache(serviceName, address);
                         }
+                        log.info("客户端接收到新增请求，插入服务为：{},地址为:{}", pathList[1], pathList[2]);
                         break;
                     case "NODE_CHANGED": // 节点更新
                         if (childData.getData() != null) {
@@ -51,7 +52,8 @@ public class WatchZK {
                         String[] oldPathList=parsePath(childData);
                         String[] newPathList=parsePath(childData1);
                         cache.replaceServiceAddress(oldPathList[1],oldPathList[2],newPathList[2]);
-                        System.out.println("修改后的数据: " + new String(childData1.getData()));
+                        log.info("客户端接收到更新请求，更新前数据为:{},更新后数据为:{}", childData.getData(), childData1.getData());
+//                        System.out.println("修改后的数据: " + new String(childData1.getData()));
                         break;
                     case "NODE_DELETED": // 节点删除
                         String[] pathList_d= parsePath(childData);
@@ -63,6 +65,7 @@ public class WatchZK {
 //                            cache.delete(serviceName,address);
                             cache.deleteServiceFromCache(serviceName, address);
                         }
+                        log.info("客户端接收到删除请求，删除数据为:{}",childData.getData());
                         break;
                     default:
                         break;
