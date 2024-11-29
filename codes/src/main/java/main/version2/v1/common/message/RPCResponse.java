@@ -19,6 +19,10 @@ public class RPCResponse implements Serializable {
     // 加入传输数据的类型，以便在自定义序列化器中解析
     private Class<?> dataType;
     //具体数据
+    /**
+     * 为什么这一步需要在响应参数里面加入数据类型的校验，参考请求参数，每个参数都应该有对应的类型。
+     * 当反序列化时，根据数据类型判断当前数据是否为此中类型，如果不是此种类型，此时需要转换到指定类型。
+     */
     private Object data;
     //构造成功信息
     public static RPCResponse sussess(Object data){

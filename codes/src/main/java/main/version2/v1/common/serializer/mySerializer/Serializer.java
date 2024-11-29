@@ -13,7 +13,12 @@ public interface Serializer {
     Object deSerialize(byte[] data, int messageType);
     // 返回指定的序列化器，是哪个
     int getType();
-    // 根据序号取出序列化器
+
+    /**
+     * 用于解码时根据类型得到对应的序列化器，进一步进行反序列化
+     * @param code
+     * @return
+     */
     static Serializer getSerializerByCode(int code){
         switch (code){
             case 0:

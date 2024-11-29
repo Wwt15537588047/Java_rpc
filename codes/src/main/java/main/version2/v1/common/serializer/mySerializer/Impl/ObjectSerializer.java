@@ -4,6 +4,9 @@ import main.version2.v1.common.serializer.mySerializer.Serializer;
 
 import java.io.*;
 
+/**
+ * 使用Java自带序列化方式实现「对象<--->字节数组」的转换
+ */
 public class ObjectSerializer implements Serializer {
     // 使用Java io对象--->byte数组
     @Override

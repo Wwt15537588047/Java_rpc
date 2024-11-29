@@ -39,7 +39,7 @@ public class ServiceCache {
             log.info("服务名{}不存在于本地缓存中...",serviceName);
         }
     }
-    // 从缓存中去服务地址
+    // 从缓存中取服务地址
     public List<String> getServiceFromCache(String serviceName){
         return cache.getOrDefault(serviceName, null);
     }

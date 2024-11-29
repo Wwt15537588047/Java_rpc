@@ -73,7 +73,7 @@ public class WatchZK {
     // 解析节点对应的地址
     public String[] parsePath(ChildData childData){
         // 获取更新的节点的路径
-        String path = new String(childData.getData());
+        String path = new String(childData.getPath());
         // 按照格式，读取
         return path.split("/");
     }

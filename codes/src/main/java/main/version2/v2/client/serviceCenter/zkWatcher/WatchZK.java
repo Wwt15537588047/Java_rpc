@@ -30,42 +30,46 @@ public class WatchZK {
                 // 创建节点时：节点刚被创建，不存在 更新前节点 ，所以第二个参数为 null
                 // 删除节点时：节点被删除，不存在 更新后节点 ，所以第三个参数为 null
                 // 节点创建时没有赋予值 create /curator/app1 只创建节点，在这种情况下，更新前节点的 data 为 null，获取不到更新前节点的数据
-                switch (type.name()){
-                    case "NODE_CREATED":
-                        String[] pathList = parsePath(childData1);
-                        if(pathList.length <= 2){
-                            break;
-                        }else{
-                            String serviceName = pathList[1];
-                            String addressName = pathList[2];
-                            cache.addServiceToCache(serviceName, addressName);
+                switch (type.name()) {
+                    case "NODE_CREATED": // 监听器第一次执行时节点存在也会触发次事件
+                        String[] pathList= parsePath(childData1);
+                        if(pathList.length<=2) break;
+                        else {
+                            String serviceName=pathList[1];
+                            String address=pathList[2];
+                            //将新注册的服务加入到本地缓存中
+//                            cache.addServcieToCache(serviceName,address);
+                            cache.addServiceToCache(serviceName, address);
                         }
                         break;
-                    case "NODE_CHANGED":
-                        if(childData.getData() != null){
-                            log.info("修改前的数据：{}...",new String(childData.getData()));
-                        }else{
-                            log.info("节点第一次赋值...");
+                    case "NODE_CHANGED": // 节点更新
+                        if (childData.getData() != null) {
+                            System.out.println("修改前的数据: " + new String(childData.getData()));
+                        } else {
+                            System.out.println("节点第一次赋值!");
                         }
-                        String[] oldPathList = parsePath(childData);
-                        String[] newPathList = parsePath(childData1);
-                        cache.replaceServiceAddress(oldPathList[1], oldPathList[2], newPathList[2]);
-                        log.info("修改后的数据：{}", new String(childData1.getData()));
+                        String[] oldPathList=parsePath(childData);
+                        String[] newPathList=parsePath(childData1);
+                        cache.replaceServiceAddress(oldPathList[1],oldPathList[2],newPathList[2]);
+                        System.out.println("修改后的数据: " + new String(childData1.getData()));
                         break;
-                    case "NODE_DELETED":
-                        String[] pathListDel = parsePath(childData);
-                        if(pathListDel.length < 2){
-                            break;
-                        }else{
-                            cache.deleteServiceFromCache(pathListDel[1], pathListDel[2]);
-                            break;
+                    case "NODE_DELETED": // 节点删除
+                        String[] pathList_d= parsePath(childData);
+                        if(pathList_d.length<=2) break;
+                        else {
+                            String serviceName=pathList_d[1];
+                            String address=pathList_d[2];
+                            //将新注册的服务加入到本地缓存中
+//                            cache.delete(serviceName,address);
+                            cache.deleteServiceFromCache(serviceName, address);
                         }
+                        break;
                     default:
                         break;
                 }
             }
         });
-        // 开启监听
+        //开启监听
         curatorCache.start();
     }
 
@@ -73,7 +77,7 @@ public class WatchZK {
     // 解析节点对应的地址
     public String[] parsePath(ChildData childData){
         // 获取更新的节点的路径
-        String path = new String(childData.getData());
+        String path = new String(childData.getPath());
         // 按照格式，读取
         return path.split("/");
     }
