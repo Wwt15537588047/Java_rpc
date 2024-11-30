@@ -27,6 +27,9 @@ public class NettyRPCClientImpl implements RPCClient {
 //        this.port=port;
         this.serviceCenter = new ZKServiceCenterImpl();
     }
+    public NettyRPCClientImpl(ServiceCenter serviceCenter){
+        this.serviceCenter = serviceCenter;
+    }
     //netty客户端初始化
     static {
         eventLoopGroup = new NioEventLoopGroup();

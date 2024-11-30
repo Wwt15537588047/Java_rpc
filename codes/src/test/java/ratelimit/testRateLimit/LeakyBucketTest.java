@@ -36,7 +36,7 @@ public class LeakyBucketTest {
             }
         });
 
-        // 模拟请求被处理，固定速率漏水
+//         模拟请求被处理，固定速率漏水
         scheduledExecutorService.scheduleAtFixedRate(()->{
            if(!queue.isEmpty()){
                System.out.println("定时任务线程池进行任务处理：" + queue.poll() + " 被处理");

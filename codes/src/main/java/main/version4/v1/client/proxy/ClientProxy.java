@@ -32,8 +32,9 @@ public class ClientProxy implements InvocationHandler {
     public ClientProxy(int choose){
         switch (choose){
             case 0:
-                rpcClient=new NettyRPCClientImpl();
+//                rpcClient=new NettyRPCClientImpl();
                 serviceCenter = new ZKServiceCenterImpl();
+                rpcClient = new NettyRPCClientImpl(serviceCenter);
                 circuitBreakerProvider = new CircuitBreakerProvider();
                 break;
             case 1:
@@ -44,8 +45,8 @@ public class ClientProxy implements InvocationHandler {
         }
     }
     public ClientProxy(){
-        rpcClient=new NettyRPCClientImpl();
         serviceCenter = new ZKServiceCenterImpl();
+        rpcClient = new NettyRPCClientImpl(serviceCenter);
         circuitBreakerProvider = new CircuitBreakerProvider();
     }
     //jdk动态代理，每一次代理对象调用方法，都会经过此方法增强（反射获取request对象，socket发送到服务端）
@@ -61,6 +62,7 @@ public class ClientProxy implements InvocationHandler {
         log.info("服务名：{}的服务获取到的熔断器为：{}", request.getInterfaceName(), circuitBreaker);
         // 判断熔断器是否允许请求通过
         if(!circuitBreaker.allowRequest()){
+            // 此处可以针对熔断器进行特殊处理,返回特殊值
             return null;
         }
 

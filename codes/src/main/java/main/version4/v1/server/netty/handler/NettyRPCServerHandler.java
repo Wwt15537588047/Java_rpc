@@ -33,6 +33,7 @@ public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCReques
         String interfaceName=rpcRequest.getInterfaceName();
         // 接口限流降级
         RateLimit rateLimit = serviceProvider.getRateLimitProvider().getRateLimit(rpcRequest.getInterfaceName());
+        log.info("当前服务为：{},获取到限流器：{}", rpcRequest.getInterfaceName(), rateLimit);
         if(!rateLimit.getToken()){
             return RPCResponse.fail();
         }
