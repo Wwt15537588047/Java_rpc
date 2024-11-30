@@ -24,6 +24,7 @@ public class GuavaRetry {
                 .withWaitStrategy(WaitStrategies.fixedWait(2, TimeUnit.SECONDS))
                 //重试停止策略：重试达到 3 次
                 .withStopStrategy(StopStrategies.stopAfterAttempt(3))
+                // 设置重试监听器，用来执行额外的处理工作
                 .withRetryListener(new RetryListener() {
                     @Override
                     public <V> void onRetry(Attempt<V> attempt) {

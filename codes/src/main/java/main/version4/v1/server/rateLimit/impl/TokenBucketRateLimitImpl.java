@@ -22,9 +22,11 @@ public class TokenBucketRateLimitImpl implements RateLimit {
     public TokenBucketRateLimitImpl(int rate, int capacity){
         RATE = rate;
         CAPACITY = capacity;
+        // 初始化时，服务当前容量等于桶能够承受的最大容量
         curCapacity = CAPACITY;
     }
 
+    // 令牌桶获取Token需要加锁，多线程并发安全
     @Override
     public synchronized boolean getToken() {
         // 如果当前桶有剩余，直接返回

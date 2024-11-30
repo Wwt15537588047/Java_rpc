@@ -12,6 +12,9 @@ import java.util.Map;
  */
 @Slf4j
 public class RateLimitProvider {
+    /**
+     * 用来保存服务对应的限流器，一个服务对应一个限流器
+     */
     private Map<String, RateLimit> rateLimitMap = new HashMap<>();
 
     public RateLimit getRateLimit(String interfaceName){

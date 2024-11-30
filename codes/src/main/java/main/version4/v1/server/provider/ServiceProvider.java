@@ -8,7 +8,9 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-// 本地服务存放器
+/**
+ * 和Server一同使用的，绑定某种通信，如Netty，提供需要的服务组件，如:ZK服务注册、限流器...
+ */
 public class ServiceProvider {
 
     // 集合中存放服务的实例
