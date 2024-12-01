@@ -1,4 +1,4 @@
-package main.version4.v1.client.circuitBreaker;
+package client.circuitBreaker;
 
 
 import java.util.concurrent.atomic.AtomicInteger;
