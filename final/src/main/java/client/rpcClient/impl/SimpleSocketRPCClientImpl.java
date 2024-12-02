@@ -24,7 +24,7 @@ public class SimpleSocketRPCClientImpl implements RPCClient {
     @Override
     public RPCResponse sendRequest(RPCRequest request) {
         // 从注册中心获取host, port
-        InetSocketAddress inetSocketAddress = serviceCenter.serviceDiscovery(request.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceCenter.serviceDiscovery(request.getInterfaceName() + "." + request.getReferences().version());
         String host = inetSocketAddress.getHostName();
         int port = inetSocketAddress.getPort();
         try {

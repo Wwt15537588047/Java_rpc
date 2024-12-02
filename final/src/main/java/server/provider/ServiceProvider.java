@@ -2,6 +2,8 @@ package server.provider;
 
 
 
+import lombok.extern.slf4j.Slf4j;
+import server.integration.RpcService;
 import server.rateLimit.provider.RateLimitProvider;
 import server.serviceRegister.ServiceRegister;
 import server.serviceRegister.impl.ZKServiceRegisterImpl;
@@ -13,6 +15,7 @@ import java.util.Map;
 /**
  * 和Server一同使用的，绑定某种通信，如Netty，提供需要的服务组件，如:ZK服务注册、限流器...
  */
+@Slf4j
 public class ServiceProvider {
 
     // 集合中存放服务的实例
@@ -40,6 +43,20 @@ public class ServiceProvider {
             interfaceProvider.put(clazz.getName(), service);
             // 在注册中心中中注册服务
             serviceRegister.register(clazz.getName(), new InetSocketAddress(host, port), canRetry);
+        }
+    }
+
+    public void providerServiceInterface(Object service, RpcService rpcService){
+        // 获取ServiceImpl的所有接口实现集合
+        Class<?>[] interfaces = service.getClass().getInterfaces();
+        String version = rpcService.version();
+        for (Class<?> clazz : interfaces) {
+            String serviceAndVersion = clazz.getName() + "." + version;
+            //本机的映射表（接口名+版本号 : 实现类）
+            interfaceProvider.put(serviceAndVersion, service);
+            log.info("本机映射表存储, serviceAndVersion : {}, service : {}", serviceAndVersion, service);
+            // 在注册中心中中注册服务
+            serviceRegister.register(serviceAndVersion, new InetSocketAddress(host, port), rpcService);
         }
     }
     // 获取服务实例

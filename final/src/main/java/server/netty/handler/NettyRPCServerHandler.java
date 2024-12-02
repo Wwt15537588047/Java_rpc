@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import server.integration.References;
 import server.provider.ServiceProvider;
 import server.rateLimit.RateLimit;
 
@@ -30,16 +31,20 @@ public class NettyRPCServerHandler extends SimpleChannelInboundHandler<RPCReques
         ctx.close();
     }
     private RPCResponse getResponse(RPCRequest rpcRequest){
+        log.info("服务端收到请求:{}", rpcRequest);
+        // 得到客户端注解
+        References references = rpcRequest.getReferences();
         //得到服务名
-        String interfaceName=rpcRequest.getInterfaceName();
+        String interfaceName = rpcRequest.getInterfaceName() + "." + references.version();
         // 接口限流降级
-        RateLimit rateLimit = serviceProvider.getRateLimitProvider().getRateLimit(rpcRequest.getInterfaceName());
+        RateLimit rateLimit = serviceProvider.getRateLimitProvider().getRateLimit(interfaceName);
         log.info("当前服务为：{},获取到限流器：{}", rpcRequest.getInterfaceName(), rateLimit);
         if(!rateLimit.getToken()){
             return RPCResponse.fail();
         }
         //得到服务端相应服务实现类
         Object service = serviceProvider.getService(interfaceName);
+        log.info("服务端收到的接口名为：{}, 对应的服务端相应实现类为：{}", interfaceName, service);
         //反射调用方法
         Method method=null;
         try {

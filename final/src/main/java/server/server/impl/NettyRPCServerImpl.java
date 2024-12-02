@@ -20,16 +20,16 @@ public class NettyRPCServerImpl implements RPCServer {
         // netty 服务线程组boss负责建立连接， work负责具体的请求
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
-        System.out.println("netty服务端启动了");
+        System.out.println("netty服务端启动了, 端口号为:" + port);
         try {
             //启动netty服务器
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             //初始化
             serverBootstrap.group(bossGroup,workGroup).channel(NioServerSocketChannel.class)
-                    //NettyClientInitializer这里 配置netty对消息的处理机制
+                    //将服务提供者传递 进行netty服务初始化，然后在channel中进行监听
                     .childHandler(new NettyServerInitializer(serviceProvider));
             //同步堵塞
-            ChannelFuture channelFuture=serverBootstrap.bind(port).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
             //死循环监听
             channelFuture.channel().closeFuture().sync();
         }catch (InterruptedException e){

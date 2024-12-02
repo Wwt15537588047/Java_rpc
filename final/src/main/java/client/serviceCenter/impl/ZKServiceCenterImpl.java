@@ -1,5 +1,6 @@
 package client.serviceCenter.impl;
 
+import common.message.RPCRequest;
 import lombok.extern.slf4j.Slf4j;
 import client.cache.ServiceCache;
 import client.serviceCenter.ServiceCenter;
@@ -11,7 +12,9 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class ZKServiceCenterImpl implements ServiceCenter {
@@ -71,27 +74,47 @@ public class ZKServiceCenterImpl implements ServiceCenter {
         return null;
     }
 
-    // 判断服务是否在白名单中，是否可以进行重试
-    @Override
-    public boolean checkRetry(String serviceName) {
-        boolean canRetry = false;
+    // TODO 是否可重试的校验修改为 从zoo节点中的注解信息获取
+    public boolean checkRetry(RPCRequest rpcRequest) {
+        boolean canRetry =false;
         try {
-            List<String> serviceList = client.getChildren().forPath("/" + RETRY);
-            for (String s : serviceList) {
-                if(s.equals(serviceName)){
-                    log.info("服务：{}在白名单中，可以重试...", serviceName);
-                    canRetry = true;
-                }
-            }
-        } catch (Exception e) {
+            List<String> serviceList = client.getChildren()
+                    .forPath("/" + rpcRequest.getInterfaceName() + "." + rpcRequest.getReferences().version());
+//            for(String s:serviceList){
+//                if(s.equals(serviceName)){
+//                    log.info("服务"+serviceName+"在白名单上，可进行重试");
+//                    canRetry=true;
+//                }
+//            }
+            String serviceInfo = serviceList.get(0).split("-")[1];
+            Map<String, String> infoMap = convertStringToHashMap(serviceInfo);
+            return infoMap.get("canRetry").equals("true");
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return canRetry;
     }
+    public static Map<String, String> convertStringToHashMap(String str) {
+        Map<String, String> map = new HashMap<>();
+        if (str != null && !str.isEmpty()) {
+            str = str.replace("{","").replace("}","");
+            String[] pairs = str.split(",");
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("=");
+                if (keyValue.length == 2) {
+                    map.put(keyValue[0].trim(), keyValue[1].trim());
+                }
+            }
+        }
+        return map;
+    }
 
     // 字符串解析为地址
     private InetSocketAddress parseAddress(String address){
-        String[] result = address.split(":");
+//        String[] result = address.split(":");
+//        return new InetSocketAddress(result[0], Integer.parseInt(result[1]));
+        // 字符串解析为地址
+        String[] result = address.split("-")[0].split(":");
         return new InetSocketAddress(result[0], Integer.parseInt(result[1]));
     }
 

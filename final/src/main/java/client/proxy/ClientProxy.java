@@ -12,6 +12,7 @@ import client.serviceCenter.impl.ZKServiceCenterImpl;
 import common.message.RPCResponse;
 import lombok.extern.slf4j.Slf4j;
 import common.message.RPCRequest;
+import server.integration.References;
 
 
 import java.lang.reflect.InvocationHandler;
@@ -30,6 +31,8 @@ public class ClientProxy implements InvocationHandler {
     private RPCClient rpcClient;
     private ServiceCenter serviceCenter;
     private CircuitBreakerProvider circuitBreakerProvider;
+    private References references;
+    private Class<?> clazz;
     public ClientProxy(int choose){
         switch (choose){
             case 0:
@@ -46,6 +49,7 @@ public class ClientProxy implements InvocationHandler {
         }
     }
     public ClientProxy(){
+        // 客户端代理会实例化：服务中心，rpc客户端，熔断器
         serviceCenter = new ZKServiceCenterImpl();
         rpcClient = new NettyRPCClientImpl(serviceCenter);
         circuitBreakerProvider = new CircuitBreakerProvider();
@@ -57,7 +61,9 @@ public class ClientProxy implements InvocationHandler {
         RPCRequest request= RPCRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
-                .params(args).paramsType(method.getParameterTypes()).build();
+                .params(args).paramsType(method.getParameterTypes())
+                .references(references)
+                .build();
         // 获取熔断器
         CircuitBreaker circuitBreaker = circuitBreakerProvider.getCircuitBreaker(request.getInterfaceName());
         log.info("服务名：{}的服务获取到的熔断器为：{}", request.getInterfaceName(), circuitBreaker);
@@ -70,7 +76,7 @@ public class ClientProxy implements InvocationHandler {
         //数据传输
         RPCResponse response;
         //后续添加逻辑：为保持幂等性，只对白名单上的服务进行重试
-        if(serviceCenter.checkRetry(request.getInterfaceName())){
+        if(serviceCenter.checkRetry(request)){
             log.info("根据Zookeeper白名单查询客户端调用服务：{}可重试，采用重试机制实现调用...", request.getInterfaceName());
             response = new GuavaRetry().sendServiceWithRetry(request, rpcClient);
         }else{
@@ -87,6 +93,22 @@ public class ClientProxy implements InvocationHandler {
     }
     public <T>T getProxy(Class<T> clazz){
         Object o = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
+        return (T)o;
+    }
+
+    /**
+     * 获取代理对象
+     * @param clazz
+     * @param references
+     * @return
+     * @param <T>
+     */
+    public <T>T getProxy(Class<T> clazz, References references){
+        Object o = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
+        //记录接口服务与注解信息
+        log.info("客户端服务:{},注解信息:{}",clazz.getName(),references.toString());
+        this.references = references;
+        this.clazz = clazz;
         return (T)o;
     }
 }
