@@ -3,7 +3,7 @@ package com.example.provider.web.service.impl;
 
 import com.publicInterface.service.UserService;
 import com.publicInterface.dto.User;
-import server.integration.RpcService;
+import part1.Server.integration.RpcService;
 
 import java.util.Random;
 import java.util.UUID;

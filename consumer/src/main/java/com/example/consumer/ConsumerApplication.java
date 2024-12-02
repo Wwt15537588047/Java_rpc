@@ -2,7 +2,7 @@ package com.example.consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import server.integration.EnableConsumer;
+import part1.Server.integration.EnableConsumer;
 
 @SpringBootApplication
 @EnableConsumer
