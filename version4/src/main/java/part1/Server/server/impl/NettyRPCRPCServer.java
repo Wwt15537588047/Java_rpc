@@ -25,7 +25,7 @@ public class NettyRPCRPCServer implements RpcServer {
         // netty 服务线程组boss负责建立连接， work负责具体的请求
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
-        log.info("netty服务端启动了");
+//        log.info("netty服务端启动了");
         try {
             //启动netty服务器
             ServerBootstrap serverBootstrap = new ServerBootstrap();

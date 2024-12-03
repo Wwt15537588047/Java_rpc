@@ -84,8 +84,8 @@ public class ClientProxy implements InvocationHandler {
         //记录接口服务与注解信息
         log.info("添加服务:{},注解信息:{}",clazz.getName(),rpcReference.toString());
         referencesHashMap.put(clazz.toString(),rpcReference);
-         this.references = rpcReference;
-         this.clazz = clazz;
+        this.references = rpcReference;
+        this.clazz = clazz;
         return (T)o;
     }
 }
