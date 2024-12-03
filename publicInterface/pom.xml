@@ -15,8 +15,8 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>final</artifactId>
+            <groupId>org.example</groupId>
+            <artifactId>version4</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

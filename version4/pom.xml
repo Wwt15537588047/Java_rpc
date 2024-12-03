@@ -87,6 +87,19 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Protostuff 核心库 新增序列化方式 -->
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-core</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <!-- Protostuff Runtime 动态 Schema 支持 -->
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-runtime</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
