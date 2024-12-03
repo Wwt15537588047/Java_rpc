@@ -1,7 +1,7 @@
 package part1.common.pojo;
 
 /**
- * @Author: yty
+ * @Author: wt
  * @Description: TODO
  * @DateTime: 2024/11/08 14:12
  **/
