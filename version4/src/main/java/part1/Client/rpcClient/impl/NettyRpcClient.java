@@ -11,8 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import part1.Client.netty.nettyInitializer.NettyClientInitializer;
 import part1.Client.rpcClient.RpcClient;
 import part1.common.Message.RpcRequest;
+import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
 import part1.Client.serviceCenter.ServiceCenter;
+import part1.common.util.RequestTransForm;
 
 import java.net.InetSocketAddress;
 
@@ -47,8 +49,10 @@ public class NettyRpcClient implements RpcClient {
         try {
             ChannelFuture channelFuture  = bootstrap.connect(host, port).sync();
             Channel channel = channelFuture.channel();
+            // 进行请求类型转换，将其替换为不含注解的类
+            RpcRequestSerializer requestSerializer = RequestTransForm.RequestTo(request);
             // 发送数据
-            channel.writeAndFlush(request);
+            channel.writeAndFlush(requestSerializer);
             //sync()堵塞获取结果
             channel.closeFuture().sync();
             // 阻塞的获得结果，通过给channel设计别名，获取特定名字下的channel中的内容（这个在handler中设置）

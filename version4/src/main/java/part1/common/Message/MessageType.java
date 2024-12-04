@@ -8,9 +8,9 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public enum MessageType {
-    REQUEST(0),RESPONSE(1);
-    private int code;
-    public int getCode(){
+    REQUEST((byte) 0),RESPONSE((byte) 1);
+    private byte code;
+    public byte getCode(){
         return code;
     }
 }

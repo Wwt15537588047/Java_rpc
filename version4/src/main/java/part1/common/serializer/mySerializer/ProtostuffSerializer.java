@@ -7,6 +7,7 @@ import io.protostuff.runtime.RuntimeSchema;
 import part1.common.Message.RpcRequest;
 import part1.common.Message.RpcResponse;
 
+import java.lang.reflect.Proxy;
 /**
  * @Author wt
  * @Description 新增Protostuff序列化方式
@@ -18,6 +19,7 @@ public class ProtostuffSerializer implements Serializer{
             LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
     @Override
     public byte[] serialize(Object obj) {
+        obj = replaceProxyWithTarget(obj); // 替换动态代理类
         if (obj == null) {
             throw new NullPointerException("序列化对象不能为空");
         }
@@ -47,6 +49,14 @@ public class ProtostuffSerializer implements Serializer{
                 break;
             default:
                 throw new IllegalArgumentException("不支持的消息类型：" + messageType);
+        }
+        return obj;
+    }
+
+    public Object replaceProxyWithTarget(Object obj) {
+        if (Proxy.isProxyClass(obj.getClass())) {
+            // 代理对象处理，可以通过框架获取真实对象，如 Spring AOP 提供的 AopProxyUtils
+            return org.springframework.aop.framework.AopProxyUtils.getSingletonTarget(obj);
         }
         return obj;
     }

@@ -1,67 +1,81 @@
 package part1.common.serializer.mySerializer;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONReader;
+import io.protostuff.Rpc;
+import lombok.extern.slf4j.Slf4j;
 import part1.common.Message.RpcRequest;
+import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
+import part1.common.util.RequestTransForm;
 
 /**
+ * 使用 FastJSON 2 进行序列化和反序列化
  * @version 1.0
  * @create 2024/6/2 22:31
  */
+@Slf4j
 public class JsonSerializer implements Serializer {
     @Override
     public byte[] serialize(Object obj) {
-        byte[] bytes = JSONObject.toJSONBytes(obj);
-        return bytes;
+        byte[] data = new byte[0];
+        try {
+            // FastJSON 2 中直接使用 JSON.toJSONBytes
+            data = JSON.toJSONBytes(obj);
+        } catch (RuntimeException e) {
+            log.error("序列化失败: {}", e.getMessage(), e);
+        }
+        return data;
     }
 
     @Override
-    public Object deserialize(byte[] bytes, int messageType) {
+    public Object deserialize(byte[] data, int messageType) {
         Object obj = null;
-        // 传输的消息分为request与response
-        switch (messageType){
-            case 0:
-                RpcRequest request = JSON.parseObject(bytes, RpcRequest.class);
-                Object[] objects = new Object[request.getParams().length];
-                // 把json字串转化成对应的对象， fastjson可以读出基本数据类型，不用转化
-                // 对转换后的request中的params属性逐个进行类型判断
-                for(int i = 0; i < objects.length; i++){
-                    Class<?> paramsType = request.getParamsType()[i];
-                    //判断每个对象类型是否和paramsTypes中的一致
-                    if (!paramsType.isAssignableFrom(request.getParams()[i].getClass())){
-                        //如果不一致，就行进行类型转换
-                        objects[i] = JSONObject.toJavaObject((JSONObject) request.getParams()[i],request.getParamsType()[i]);
-                    }else{
-                        //如果一致就直接赋给objects[i]
-                        objects[i] = request.getParams()[i];
+        try {
+            switch (messageType) {
+                case 0: {
+                    // 反序列化 RpcRequest 对象
+                    RpcRequest req = new RpcRequest();
+                    RpcRequestSerializer requestSerializer = JSON.parseObject(data, RpcRequestSerializer.class, JSONReader.Feature.SupportClassForName);
+                    Object[] objects = requestSerializer.getParams() == null ? new Object[0] : new Object[requestSerializer.getParams().length];
+
+                    // 处理 params 中的每个参数，确保类型匹配
+                    for (int i = 0; i < objects.length; i++) {
+                        Class<?> paramType = requestSerializer.getParamsType()[i];
+                        Object param = requestSerializer.getParams()[i];
+                        if (param instanceof JSONObject) {
+                            objects[i] = ((JSONObject) param).toJavaObject(paramType);
+                        } else {
+                            objects[i] = param;
+                        }
                     }
-                }
-                request.setParams(objects);
-                obj = request;
-                break;
-            case 1:
-                RpcResponse response = JSON.parseObject(bytes, RpcResponse.class);
-                // 如果类型为空，说明返回错误
-                if(response.getDataType()==null){
-                    obj = RpcResponse.fail();
+                    requestSerializer.setParams(objects);
+                    req = RequestTransForm.GetRequest(requestSerializer);
+                    obj = req;
                     break;
                 }
-                Class<?> dataType = response.getDataType();
-                //判断转化后的response对象中的data的类型是否正确
-                if(!dataType.isAssignableFrom(response.getData().getClass())){
-                    response.setData(JSONObject.toJavaObject((JSONObject) response.getData(),dataType));
+                case 1: {
+                    // 反序列化 RpcResponse 对象
+                    RpcResponse resp = JSON.parseObject(data, RpcResponse.class, JSONReader.Feature.SupportClassForName);
+                    Class<?> dataType = resp.getDataType();
+                    Object responseData = resp.getData();
+
+                    if (responseData instanceof JSONObject) {
+                        resp.setData(((JSONObject) responseData).toJavaObject(dataType));
+                    }
+                    obj = resp;
+                    break;
                 }
-                obj = response;
-                break;
-            default:
-                System.out.println("暂时不支持此种消息");
-                throw new RuntimeException();
+                default:
+                    throw new IllegalArgumentException("不支持的消息类型: " + messageType);
+            }
+        } catch (RuntimeException e) {
+            log.error("反序列化失败: {}", e.getMessage(), e);
         }
         return obj;
     }
 
-    //1 代表json序列化方式
     @Override
     public int getType() {
         return 1;

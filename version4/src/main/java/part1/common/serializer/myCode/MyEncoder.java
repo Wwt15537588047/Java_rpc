@@ -6,6 +6,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.AllArgsConstructor;
 import part1.common.Message.MessageType;
 import part1.common.Message.RpcRequest;
+import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
 import part1.common.serializer.mySerializer.Serializer;
 
@@ -42,7 +43,12 @@ public class MyEncoder extends MessageToByteEncoder {
         // 2.版本号，目前设置为1
         out.writeByte(1);
         //3.写入消息类型
-        if(msg instanceof RpcRequest){
+//        if(msg instanceof RpcRequest){
+//            out.writeByte(MessageType.REQUEST.getCode());
+//        }
+        // 编码目前由RpcRequest替换为RpcRequestSerializer，前者含有注解类型字段References，使用fastJson库不能序列化
+        // 所以目前需要利用那个一个中间件进行类型替换。
+        if(msg instanceof RpcRequestSerializer){
             out.writeByte(MessageType.REQUEST.getCode());
         }
         else if(msg instanceof RpcResponse){
