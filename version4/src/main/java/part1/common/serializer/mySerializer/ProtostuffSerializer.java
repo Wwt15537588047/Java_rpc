@@ -5,7 +5,9 @@ import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 import part1.common.Message.RpcRequest;
+import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
+import part1.common.util.RequestTransForm;
 
 import java.lang.reflect.Proxy;
 /**
@@ -19,7 +21,7 @@ public class ProtostuffSerializer implements Serializer{
             LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
     @Override
     public byte[] serialize(Object obj) {
-        obj = replaceProxyWithTarget(obj); // 替换动态代理类
+//        obj = replaceProxyWithTarget(obj); // 替换动态代理类
         if (obj == null) {
             throw new NullPointerException("序列化对象不能为空");
         }
@@ -42,7 +44,10 @@ public class ProtostuffSerializer implements Serializer{
         Object obj;
         switch (messageType) {
             case 0: // RpcRequest 类型
-                obj = deserialize(bytes, RpcRequest.class);
+                // 此时消息类型为请求类型，由于编码时已经将其转换为RpcRequestSerializer类型，所以此时反序列化时也需要中间类转换
+                obj = deserialize(bytes, RpcRequestSerializer.class);
+                RpcRequest rpcRequest = RequestTransForm.GetRequest((RpcRequestSerializer) obj);
+                obj = rpcRequest;
                 break;
             case 1: // RpcResponse 类型
                 obj = deserialize(bytes, RpcResponse.class);

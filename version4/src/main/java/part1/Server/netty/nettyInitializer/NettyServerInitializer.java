@@ -24,7 +24,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         //使用自定义的编/解码器
-        pipeline.addLast(new MyEncoder(new JsonSerializer()));
+        pipeline.addLast(new MyEncoder(new ProtostuffSerializer()));
         pipeline.addLast(new MyDecoder());
         pipeline.addLast(new NettyRPCServerHandler(serviceProvider));
     }

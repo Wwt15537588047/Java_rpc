@@ -27,4 +27,17 @@ public interface Serializer {
                 return null;
         }
     }
+
+    static String getSerializerNameByCode(int code){
+        switch (code){
+            case 0:
+                return "Java_Jdk";
+            case 1:
+                return "JSON";
+            case 2:
+                return "Protostuff";
+            default:
+                return null;
+        }
+    }
 }
