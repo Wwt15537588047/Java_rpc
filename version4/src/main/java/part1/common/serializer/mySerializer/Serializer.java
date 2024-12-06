@@ -1,10 +1,7 @@
 package part1.common.serializer.mySerializer;
 
 
-import part1.common.serializer.mySerializer.impl.JsonSerializer;
-import part1.common.serializer.mySerializer.impl.KryoSerializer;
-import part1.common.serializer.mySerializer.impl.ObjectSerializer;
-import part1.common.serializer.mySerializer.impl.ProtostuffSerializer;
+import part1.common.serializer.mySerializer.impl.*;
 
 /**
  * @version 1.0
@@ -30,6 +27,8 @@ public interface Serializer {
                 return new ProtostuffSerializer();
             case 3:
                 return new KryoSerializer();
+            case 4:
+                return new HessianSerializer();
             default:
                 return null;
         }
@@ -45,6 +44,8 @@ public interface Serializer {
                 return "Protostuff";
             case 3:
                 return "Kryo";
+            case 4:
+                return "Hessian";
             default:
                 return null;
         }
