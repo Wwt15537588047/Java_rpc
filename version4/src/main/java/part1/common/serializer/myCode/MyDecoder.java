@@ -47,7 +47,8 @@ public class MyDecoder extends ByteToMessageDecoder {
         in.readBytes(bytes);
 //        System.out.println("bytes==="+new String(bytes));
         Object deserialize= serializer.deserialize(bytes, messageType);
-        log.info("当前反序列化类型为 serializerType : {}, 反序列化后的消息为：{}", Serializer.getSerializerNameByCode(serializerType), deserialize);
+        log.info("接收方正在进行消息反序列化，序列化方式为：{},反序列化后的消息为：{}", Serializer.getSerializerNameByCode(serializer.getType()), deserialize);
+//        log.info("当前反序列化类型为 serializerType : {}, 反序列化后的消息为：{}", Serializer.getSerializerNameByCode(serializerType), deserialize);
         log.info("解码器当前读取到的消息，magicNum:{}, version:{}, messageType:{},serializerType:{}, sequenceId:{}", magicNum, version,messageType,serializerType,sequenceId);
         out.add(deserialize);
     }

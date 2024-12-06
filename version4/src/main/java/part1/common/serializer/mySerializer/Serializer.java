@@ -1,6 +1,10 @@
 package part1.common.serializer.mySerializer;
 
 
+import part1.common.serializer.mySerializer.impl.JsonSerializer;
+import part1.common.serializer.mySerializer.impl.ObjectSerializer;
+import part1.common.serializer.mySerializer.impl.ProtostuffSerializer;
+
 /**
  * @version 1.0
  * @create 2024/6/2 22:31

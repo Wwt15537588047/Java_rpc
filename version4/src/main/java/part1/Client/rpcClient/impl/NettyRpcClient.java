@@ -21,21 +21,33 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class NettyRpcClient implements RpcClient {
 
-    private static final Bootstrap bootstrap;
-    private static final EventLoopGroup eventLoopGroup;
+    private static Bootstrap bootstrap;
+    private static EventLoopGroup eventLoopGroup;
 
     private ServiceCenter serviceCenter;
-    public NettyRpcClient(ServiceCenter serviceCenter) throws InterruptedException {
+    public NettyRpcClient(ServiceCenter serviceCenter, int serializerType) throws InterruptedException {
         this.serviceCenter=serviceCenter;
+        eventLoopGroup = new NioEventLoopGroup();
+        bootstrap = new Bootstrap();
+        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
+                .handler(new NettyClientInitializer(serializerType));
     }
 
-    //netty客户端初始化
-    static {
+    public NettyRpcClient(ServiceCenter serviceCenter) throws InterruptedException {
+        this.serviceCenter=serviceCenter;
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
                 .handler(new NettyClientInitializer());
     }
+
+    //netty客户端初始化
+//    static {
+//        eventLoopGroup = new NioEventLoopGroup();
+//        bootstrap = new Bootstrap();
+//        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
+//                .handler(new NettyClientInitializer());
+//    }
 
     //客户端发生请求
     @Override
@@ -47,7 +59,9 @@ public class NettyRpcClient implements RpcClient {
         String host = address.getHostName();
         int port = address.getPort();
         try {
+            // channelFuture操作执行结果
             ChannelFuture channelFuture  = bootstrap.connect(host, port).sync();
+            // channelFuture的channel()方法获取连接相关连的channel
             Channel channel = channelFuture.channel();
             // 进行请求类型转换，将其替换为不含注解的类
             RpcRequestSerializer requestSerializer = RequestTransForm.RequestTo(request);

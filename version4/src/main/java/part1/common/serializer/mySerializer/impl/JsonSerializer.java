@@ -1,4 +1,4 @@
-package part1.common.serializer.mySerializer;
+package part1.common.serializer.mySerializer.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import part1.common.Message.RpcRequest;
 import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
+import part1.common.serializer.mySerializer.Serializer;
 import part1.common.util.RequestTransForm;
 
 /**

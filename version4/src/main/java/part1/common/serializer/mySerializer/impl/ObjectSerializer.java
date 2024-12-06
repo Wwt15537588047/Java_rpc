@@ -1,4 +1,6 @@
-package part1.common.serializer.mySerializer;
+package part1.common.serializer.mySerializer.impl;
+
+import part1.common.serializer.mySerializer.Serializer;
 
 import java.io.*;
 

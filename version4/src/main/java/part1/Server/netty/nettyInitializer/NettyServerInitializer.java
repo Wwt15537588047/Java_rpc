@@ -8,9 +8,7 @@ import part1.Server.netty.handler.NettyRPCServerHandler;
 import part1.Server.provider.ServiceProvider;
 import part1.common.serializer.myCode.MyDecoder;
 import part1.common.serializer.myCode.MyEncoder;
-import part1.common.serializer.mySerializer.JsonSerializer;
-import part1.common.serializer.mySerializer.ObjectSerializer;
-import part1.common.serializer.mySerializer.ProtostuffSerializer;
+import part1.common.serializer.mySerializer.Serializer;
 
 /**
  * @version 1.0
@@ -20,11 +18,12 @@ import part1.common.serializer.mySerializer.ProtostuffSerializer;
 @AllArgsConstructor
 public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
     private ServiceProvider serviceProvider;
+    private int serializerType;
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         //使用自定义的编/解码器
-        pipeline.addLast(new MyEncoder(new ProtostuffSerializer()));
+        pipeline.addLast(new MyEncoder(Serializer.getSerializerByCode(serializerType)));
         pipeline.addLast(new MyDecoder());
         pipeline.addLast(new NettyRPCServerHandler(serviceProvider));
     }

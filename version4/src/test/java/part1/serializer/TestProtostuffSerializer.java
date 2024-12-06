@@ -2,7 +2,7 @@ package part1.serializer;
 
 import lombok.extern.slf4j.Slf4j;
 import part1.common.Message.RpcRequest;
-import part1.common.serializer.mySerializer.ProtostuffSerializer;
+import part1.common.serializer.mySerializer.impl.ProtostuffSerializer;
 
 /**
  * @Author wt

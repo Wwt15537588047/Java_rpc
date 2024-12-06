@@ -35,6 +35,13 @@ public class ClientProxy implements InvocationHandler {
         circuitBreakerProvider=new CircuitBreakerProvider();
     }
 
+    public ClientProxy(int serializerType) throws InterruptedException {
+        // 客户端代理会实例化：服务中心，rpc客户端，熔断器
+        serviceCenter = new ZKServiceCenter();
+        rpcClient = new NettyRpcClient(serviceCenter, serializerType);
+        circuitBreakerProvider=new CircuitBreakerProvider();
+    }
+
     //jdk动态代理，每一次代理对象调用方法，都会经过此方法增强（反射获取request对象，socket发送到服务端）
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

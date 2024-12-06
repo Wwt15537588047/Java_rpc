@@ -31,7 +31,7 @@ public class ConsumerPostProcessor implements InitializingBean, BeanPostProcesso
 //        }
 //    }
 
-
+    private int serializerType;
     /**
      * 读取配置文件后的操作 ——> 启动 RPC 服务
      * @throws Exception
@@ -59,7 +59,7 @@ public class ConsumerPostProcessor implements InitializingBean, BeanPostProcesso
                 field.setAccessible(true);
                 Object object = null;
                 try {
-                    ClientProxy clientProxy = new ClientProxy();
+                    ClientProxy clientProxy = new ClientProxy(serializerType);
                     //获取服务代理对象
                     log.info("接口类型:{},接口参数:{}",aClass,rpcReference);
                     object = clientProxy.getProxy(aClass,rpcReference);
@@ -86,5 +86,7 @@ public class ConsumerPostProcessor implements InitializingBean, BeanPostProcesso
      */
     @Override
     public void setEnvironment(Environment environment) {
+        this.serializerType = Integer.parseInt(environment.getProperty("rpc.client.serializerType", "0"));
+        log.info("消费者从配置文件读取到的序列化方式为：{}", serializerType);
     }
 }

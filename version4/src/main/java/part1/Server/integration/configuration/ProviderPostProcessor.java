@@ -13,6 +13,7 @@ import part1.Server.integration.RpcService;
 import part1.Server.provider.ServiceProvider;
 import part1.Server.server.RpcServer;
 import part1.Server.server.impl.NettyRPCRPCServer;
+import part1.common.serializer.mySerializer.Serializer;
 
 /**
  * @Author: yty
@@ -31,6 +32,8 @@ public class ProviderPostProcessor implements InitializingBean,BeanPostProcessor
 
 //    @Value("${rpc.server.port:9999}")
     private int port;
+
+    private int serializerType;
     private ServiceProvider serviceProvider;
 
     private RpcServer rpcServer;
@@ -85,7 +88,7 @@ public class ProviderPostProcessor implements InitializingBean,BeanPostProcessor
         // 双重检验确保只被初始化一次
         if(serviceProvider == null){
             serviceProvider = new ServiceProvider(host,port);
-            rpcServer = new NettyRPCRPCServer(serviceProvider);
+            rpcServer = new NettyRPCRPCServer(serviceProvider, serializerType);
         }
     }
 
@@ -98,6 +101,7 @@ public class ProviderPostProcessor implements InitializingBean,BeanPostProcessor
     public void setEnvironment(Environment environment) {
         this.host = environment.getProperty("rpc.server.host", "127.0.0.1");
         this.port = Integer.parseInt(environment.getProperty("rpc.server.port", "9999"));
-        log.info("RPC服务端host:{},端口port:{}", host, port);
+        this.serializerType = Integer.parseInt(environment.getProperty("rpc.server.serializerType", "0"));
+        log.info("RPC服务端host:{},端口port:{},序列化类型：{}", host, port, serializerType);
     }
 }

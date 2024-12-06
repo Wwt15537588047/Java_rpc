@@ -1,9 +1,11 @@
 package part1.common.serializer.myCode;
 
+import com.google.j2objc.annotations.LoopTranslation;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import part1.common.Message.MessageType;
 import part1.common.Message.RpcRequest;
 import part1.common.Message.RpcRequestSerializer;
@@ -16,6 +18,7 @@ import part1.common.serializer.mySerializer.Serializer;
  *   依次按照自定义的消息格式写入，传入的数据为request或者response
  *   需要持有一个serialize器，负责将传入的对象序列化成字节数组
  */
+@Slf4j
 @AllArgsConstructor
 public class MyEncoder extends MessageToByteEncoder {
 
@@ -62,6 +65,7 @@ public class MyEncoder extends MessageToByteEncoder {
         out.writeInt(10);
         //得到序列化数组
         byte[] serializeBytes = serializer.serialize(msg);
+        log.info("发送方正在进行消息序列化，序列化方式为：{},序列化数组为：{}", Serializer.getSerializerNameByCode(serializer.getType()), serializeBytes);
         //byte[] serializeBytes = JSONObject.toJSONBytes(msg);
         //3.写入长度
         out.writeInt(serializeBytes.length);

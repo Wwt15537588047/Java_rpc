@@ -1,4 +1,4 @@
-package part1.common.serializer.mySerializer;
+package part1.common.serializer.mySerializer.impl;
 
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
@@ -7,6 +7,7 @@ import io.protostuff.runtime.RuntimeSchema;
 import part1.common.Message.RpcRequest;
 import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
+import part1.common.serializer.mySerializer.Serializer;
 import part1.common.util.RequestTransForm;
 
 import java.lang.reflect.Proxy;
@@ -15,7 +16,7 @@ import java.lang.reflect.Proxy;
  * @Description 新增Protostuff序列化方式
  * @Data 2024/12/3 下午10:02
  */
-public class ProtostuffSerializer implements Serializer{
+public class ProtostuffSerializer implements Serializer {
     // 线程私有的缓冲区，避免多线程竞争
     private static final ThreadLocal<LinkedBuffer> BUFFER_THREAD_LOCAL = ThreadLocal.withInitial(() ->
             LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
