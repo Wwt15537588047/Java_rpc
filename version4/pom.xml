@@ -100,6 +100,13 @@
             <version>1.8.0</version>
         </dependency>
 
+<!--        kryo序列化依赖-->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.6.2</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

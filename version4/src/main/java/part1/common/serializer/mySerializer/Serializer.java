@@ -2,6 +2,7 @@ package part1.common.serializer.mySerializer;
 
 
 import part1.common.serializer.mySerializer.impl.JsonSerializer;
+import part1.common.serializer.mySerializer.impl.KryoSerializer;
 import part1.common.serializer.mySerializer.impl.ObjectSerializer;
 import part1.common.serializer.mySerializer.impl.ProtostuffSerializer;
 
@@ -27,6 +28,8 @@ public interface Serializer {
                 return new JsonSerializer();
             case 2:
                 return new ProtostuffSerializer();
+            case 3:
+                return new KryoSerializer();
             default:
                 return null;
         }
@@ -40,6 +43,8 @@ public interface Serializer {
                 return "JSON";
             case 2:
                 return "Protostuff";
+            case 3:
+                return "Kryo";
             default:
                 return null;
         }

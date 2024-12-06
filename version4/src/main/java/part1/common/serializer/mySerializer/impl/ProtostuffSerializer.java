@@ -4,6 +4,7 @@ import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
+import lombok.extern.slf4j.Slf4j;
 import part1.common.Message.RpcRequest;
 import part1.common.Message.RpcRequestSerializer;
 import part1.common.Message.RpcResponse;
@@ -16,6 +17,7 @@ import java.lang.reflect.Proxy;
  * @Description 新增Protostuff序列化方式
  * @Data 2024/12/3 下午10:02
  */
+@Slf4j
 public class ProtostuffSerializer implements Serializer {
     // 线程私有的缓冲区，避免多线程竞争
     private static final ThreadLocal<LinkedBuffer> BUFFER_THREAD_LOCAL = ThreadLocal.withInitial(() ->
@@ -32,9 +34,12 @@ public class ProtostuffSerializer implements Serializer {
         LinkedBuffer buffer = BUFFER_THREAD_LOCAL.get();
         try {
             return ProtostuffIOUtil.toByteArray(obj, schema, buffer);
+        } catch (RuntimeException e)  {
+            log.info("Protostuff序列化失败，失败消息为e:", e.toString());
         } finally {
             buffer.clear(); // 每次使用完清理缓存，供下次使用
         }
+        return null;
     }
 
     @Override
@@ -42,19 +47,23 @@ public class ProtostuffSerializer implements Serializer {
         if (bytes == null || bytes.length == 0) {
             throw new IllegalArgumentException("反序列化字节数组不能为空");
         }
-        Object obj;
-        switch (messageType) {
-            case 0: // RpcRequest 类型
-                // 此时消息类型为请求类型，由于编码时已经将其转换为RpcRequestSerializer类型，所以此时反序列化时也需要中间类转换
-                obj = deserialize(bytes, RpcRequestSerializer.class);
-                RpcRequest rpcRequest = RequestTransForm.GetRequest((RpcRequestSerializer) obj);
-                obj = rpcRequest;
-                break;
-            case 1: // RpcResponse 类型
-                obj = deserialize(bytes, RpcResponse.class);
-                break;
-            default:
-                throw new IllegalArgumentException("不支持的消息类型：" + messageType);
+        Object obj = null;
+        try{
+            switch (messageType) {
+                case 0: // RpcRequest 类型
+                    // 此时消息类型为请求类型，由于编码时已经将其转换为RpcRequestSerializer类型，所以此时反序列化时也需要中间类转换
+                    obj = deserialize(bytes, RpcRequestSerializer.class);
+                    RpcRequest rpcRequest = RequestTransForm.GetRequest((RpcRequestSerializer) obj);
+                    obj = rpcRequest;
+                    break;
+                case 1: // RpcResponse 类型
+                    obj = deserialize(bytes, RpcResponse.class);
+                    break;
+                default:
+                    throw new IllegalArgumentException("不支持的消息类型：" + messageType);
+            }
+        }catch (RuntimeException e){
+            log.info("Protostuff反序列化失败,失败消息为e:",e.toString());
         }
         return obj;
     }
