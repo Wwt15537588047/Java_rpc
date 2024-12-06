@@ -1,6 +1,8 @@
 package part1.common.serializer.mySerializer.impl;
 
+import part1.common.Message.RpcRequestSerializer;
 import part1.common.serializer.mySerializer.Serializer;
+import part1.common.util.RequestTransForm;
 
 import java.io.*;
 
@@ -42,6 +44,9 @@ public class ObjectSerializer implements Serializer {
             bis.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        if(messageType == 0){
+            obj = RequestTransForm.GetRequest((RpcRequestSerializer) obj);
         }
         return obj;
     }

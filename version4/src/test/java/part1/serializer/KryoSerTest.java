@@ -1,4 +1,4 @@
-package part1.common.serializer.mySerializer.impl;
+package part1.serializer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -13,25 +13,38 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
+
 /**
  * @Author wt
- * @Description 增加kryo序列化方式
- * @Data 2024/12/6 下午4:58
+ * @Description TODO
+ * @Data 2024/12/6 下午8:42
  */
 @Slf4j
-public class KryoSerializer implements Serializer {
-
+public class KryoSerTest implements Serializer {
     // kryo 线程不安全，所以使用 ThreadLocal 保存 kryo 对象
     private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
         /**
          * Kryo要求所有序列化的类都必须被注册，内部Object[]、Class<?>[]并不会被注册到Kryo，需要显示注册
          */
         Kryo kryo = new Kryo();
+        kryo.setRegistrationRequired(false); // 禁用注册限制
         kryo.register(Object[].class);
         kryo.register(Class.class);
         kryo.register(Class[].class);
         kryo.register(RpcRequestSerializer.class);
         kryo.register(RpcResponse.class);
+        kryo.register(int[].class);
+        kryo.register(List.class);
+        kryo.register(Map.class);
+        kryo.register(java.util.Arrays.asList("").getClass());
+        kryo.register(TestSerializer.class);
+//        kryo.register(part1.serializer.TestSerializer$1.class);
+//        kryo.register(TestSerializer.class)
+//        kryo.register(ArrayList.class);
+//        String.class,
+//                int[].class,
+//                List.class,
+//                Map.class
         return kryo;
     });
     @Override
