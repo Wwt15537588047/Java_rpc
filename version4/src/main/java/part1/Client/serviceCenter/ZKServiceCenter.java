@@ -1,14 +1,14 @@
 package part1.Client.serviceCenter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import part1.Client.serviceCenter.ZkWatcher.watchZK;
 import part1.Client.cache.serviceCache;
-import part1.Client.serviceCenter.balance.impl.ConsistencyHashBalance;
+import part1.Client.serviceCenter.balance.LoadBalance;
+import part1.Client.serviceCenter.balance.impl.ConsistenceHashBalance;
 import part1.common.Message.RpcRequest;
 
 import java.net.InetSocketAddress;
@@ -48,7 +48,7 @@ public class ZKServiceCenter implements ServiceCenter{
     }
     //根据服务名（接口名）返回地址
     @Override
-    public InetSocketAddress serviceDiscovery(String serviceName) {
+    public InetSocketAddress serviceDiscovery(String serviceName, String loadBalanceName) {
         try {
             //先从本地缓存中找
             List<String> addressList=cache.getServiceListFromCache(serviceName);
@@ -58,7 +58,10 @@ public class ZKServiceCenter implements ServiceCenter{
                 addressList=client.getChildren().forPath("/" + serviceName);
             }
             // 负载均衡得到地址（要先解析得到地址）
-            String address = new ConsistencyHashBalance().balance(addressList);
+            log.info("当前负载均衡策略为:{}", loadBalanceName);
+            LoadBalance loadBalance = LoadBalance.getLoadBalance(loadBalanceName);
+            assert loadBalance != null;
+            String address = loadBalance.balance(addressList);
             return parseAddress(address);
         } catch (Exception e) {
             e.printStackTrace();

@@ -55,7 +55,7 @@ public class NettyRpcClient implements RpcClient {
         log.info("客户端发生请求" + request);
         //从注册中心获取host,post
         InetSocketAddress address = serviceCenter
-                .serviceDiscovery(request.getInterfaceName() + "." +request.getReferences().version());
+                .serviceDiscovery(request.getInterfaceName() + "." +request.getReferences().version(), request.getReferences().loadBalance());
         String host = address.getHostName();
         int port = address.getPort();
         try {

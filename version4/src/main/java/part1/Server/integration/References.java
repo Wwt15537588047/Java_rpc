@@ -27,5 +27,5 @@ public @interface References {
     /**
      * 负载均衡策略
      */
-    String loadBalance() default "RoundLoadBalance";
+    String loadBalance() default "ConsistenceHash";
 }

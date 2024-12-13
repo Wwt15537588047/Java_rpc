@@ -9,7 +9,7 @@ import java.util.*;
  * @create 2024/6/19 21:16
  * 一致性哈希算法 负载均衡
  */
-public class ConsistencyHashBalance implements LoadBalance {
+public class ConsistenceHashBalance implements LoadBalance {
     // 虚拟节点的个数
     private static final int VIRTUAL_NUM = 5;
 
